@@ -5,8 +5,10 @@
 SEO_Flow_Extraction <- function(SEO_Num,date_start,date_end) {
   
   library(jsonlite)
-  library(httr)#2)
+  library(httr2)
   library(tidyverse)
+  library(curl)
+  
   
   RawData <- POST(paste("https://seoflow.wyo.gov/Data/DatasetGrid?dataset=",SEO_Num,sep=""),
                   config = list(
@@ -33,7 +35,7 @@ SEO_Flow_Extraction <- function(SEO_Num,date_start,date_end) {
   return(RawData)
 }
 
-PassCreekSEO <- data.frame(SEO_Flow_Extraction("4989",Sys.Date()-1,Sys.Date()+1))
+PassCreekSEO <- data.frame(SEO_Flow_Extraction("4989",Sys.Date()-7,Sys.Date()+2))
 PassCreekSEO$TimeStamp <- PassCreekSEO$TimeStamp-6*60*60
 
 #setwd("C:/Users/srogacz1/Dropbox/RShiny Apps/Pass Creek/R Web App")
@@ -60,7 +62,7 @@ fetch_data <- function(site,datainterval,timeoffset,n) {
   #content(r)
   tok <- content(r)$access_token
   
-  strttime = as.numeric(Sys.Date()-1)*86400+timeoffset*3600 # start time of data retrieval: datre in days converted to seconds with time offset for timedifferences
+  strttime = as.numeric(Sys.Date()-7)*86400+timeoffset*3600 # start time of data retrieval: datre in days converted to seconds with time offset for timedifferences
   endtime = as.numeric(Sys.Date()+2)*86400+timeoffset*3600 # end time of data retrieval: datre in days converted to seconds with time offset for timedifferences
   times <- seq(strttime, endtime, by = 60*datainterval) #data timestamps
   
@@ -96,7 +98,6 @@ fetch_data <- function(site,datainterval,timeoffset,n) {
   return(Flows)
 }
 
-#PC1FLow <- fetch_data(5002084488052736,15,0,1) #convert to cfs before displaying
 PC4Depth <- fetch_data(5569481418735616,15,0,3) #depth in feet
 
 PC1Depth <- fetch_data(6102784244711424,15,0,3) #depth in meters from level troll
@@ -118,5 +119,5 @@ PC4Rating <-function(depth){97.797*depth - 196.44}
 PC4Depth$`Flow (cfs)` <-sapply(PC4Depth[,2]*3.28084,PC4Rating) #need to change from meters to feet
 
 #setwd("C:/Users/srogacz1/Dropbox/RShiny Apps/Pass Creek/R Web App")
-write.csv(PC1Depth,"data/PassCreekPC1.csv", row.names = FALSE)
-write.csv(PC4Depth,"data/PassCreekPC4.csv", row.names = FALSE)
+write.csv(PC1Depth,"PassCreekPC1.csv", row.names = FALSE)
+write.csv(PC4Depth,"PassCreekPC4.csv", row.names = FALSE)
