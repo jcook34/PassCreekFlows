@@ -1,9 +1,18 @@
+
+
+library(rsconnect)
+rsconnect::setAccountInfo(
+  name = "your_account_name",
+  token = "PASTE_YOUR_TOKEN_HERE",
+  secret = "PASTE_YOUR_SECRET_HERE"
+)
+
+
 #######################################
 #Code for Extracting Recent Gauge Data#
 #######################################
 
 library(jsonlite)
-library(httr)
 library(httr2)
 library(tidyverse)
 library(curl)
