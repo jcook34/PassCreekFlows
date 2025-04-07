@@ -1,4 +1,4 @@
-name: Run R Script Hourly
+name: Update Gauge Data
 
 on:
   schedule:
@@ -22,7 +22,7 @@ jobs:
 
       - name: Install packages
         run: |
-           Rscript -e 'install.packages(c("httr2", "jsonlite", "tidyverse", "curl"))'
+           Rscript -e 'install.packages(c("httr2","httr", "jsonlite", "tidyverse", "curl"))'
 
       - name: Run the script
         run: Rscript Hourly_Updater.R
