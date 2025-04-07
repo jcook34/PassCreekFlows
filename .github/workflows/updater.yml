@@ -28,9 +28,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-r-
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev
+
       - name: Install R packages
         run: |
-          Rscript -e 'install.packages(c("httr2", "jsonlite"), repos = "https://cloud.r-project.org")'
+          Rscript -e 'install.packages(c("httr2", "jsonlite"), repos = "https://cloud.r-project.org", dependencies = TRUE)'
 
       - name: Run update script
         run: Rscript Hourly_Updater.R
