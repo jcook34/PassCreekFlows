@@ -2,8 +2,8 @@ name: Update Gauge Data
 
 on:
   schedule:
-    - cron: '15 * * * *'  # every hour at the top of the hour (UTC)
-  workflow_dispatch:      # manual trigger if needed
+    - cron: '15 * * * *'  # Every hour at 15 minutes past
+  workflow_dispatch:
 
 jobs:
   run-r-script:
@@ -21,12 +21,12 @@ jobs:
         uses: r-lib/actions/setup-r@v2
 
       - name: Cache R packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
-          path: ~/.local/share/r-miniconda/pkgs  # Path to store cached packages
-          key: ${{ runner.os }}-r-packages-${{ hashFiles('**/*.R') }}  # Cache key based on R files
+          path: ~/.cache/R
+          key: ${{ runner.os }}-r-${{ hashFiles('**/*.R') }}
           restore-keys: |
-            ${{ runner.os }}-r-packages-
+            ${{ runner.os }}-r-
 
       - name: Install R packages
         run: |
@@ -34,14 +34,14 @@ jobs:
 
       - name: Run update script
         run: Rscript Hourly_Updater.R
-        
-# Commit and push updated CSV files if there are changes
+
       - name: Commit updated results
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
-          git add .  # Add all changes (adjust if necessary)
-          git diff --cached --exit-code || git commit -m "Update gauge data"
+          git pull --rebase || true  # Avoid push errors if remote has changed
+          git add .
+          git diff --cached --quiet || git commit -m "Update gauge data"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided by GitHub Actions
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
