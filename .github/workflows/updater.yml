@@ -30,7 +30,7 @@ jobs:
 
       - name: Install R packages
         run: |
-          Rscript -e 'install.packages(c("httr2", "jsonlite"))'
+          Rscript -e 'install.packages(c("httr2", "jsonlite"), repos = "https://cloud.r-project.org")'
 
       - name: Run update script
         run: Rscript Hourly_Updater.R
