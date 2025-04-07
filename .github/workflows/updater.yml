@@ -30,7 +30,7 @@ jobs:
 
       - name: Install R packages
         run: |
-          Rscript -e 'install.packages(c("httr2", "tidyverse"))'
+          Rscript -e 'install.packages(c("httr2", "jsonlite"))'
 
       - name: Run update script
         run: Rscript Hourly_Updater.R
