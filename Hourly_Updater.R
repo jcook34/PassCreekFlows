@@ -64,8 +64,8 @@ fetch_data <- function(site,datainterval,timeoffset,n) {
             config = list(),
             body = list(
               grant_type="client_credentials",
-              client_id="irrigationfallowingcurtailment",
-              client_secret="cac0e8b984c84095b65af92af711309c",
+              client_id=Sys.getenv("HYDROVU_CLIENT_ID"),
+              client_secret=Sys.getenv("HYDROVU_CLIENT_SECRET"),
               scope="read:locations"#api_suburbperformance_read"
             ),
             encode = "form"
