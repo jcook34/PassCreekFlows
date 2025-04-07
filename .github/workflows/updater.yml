@@ -27,10 +27,13 @@ jobs:
       - name: Run the script
         run: Rscript Hourly_Updater.R
 
-      - name: Commit results
+# Commit and push updated CSV files if there are changes
+      - name: Commit updated results
         run: |
-          git config --global user.email "action@github.com"
-          git config --global user.name "GitHub Actions"
-          git add *.csv
-          git commit -m "Update data (hourly run)" || echo "No changes to commit"
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add .  # Add all changes (adjust if necessary)
+          git diff --cached --exit-code || git commit -m "Update gauge data"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Automatically provided by GitHub Actions
